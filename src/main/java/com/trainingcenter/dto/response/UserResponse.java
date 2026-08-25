@@ -1,0 +1,26 @@
+package com.trainingcenter.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UserResponse {
+    private Long userId;
+    private String username;
+    private String email;
+    private String mobile;
+    private List<String> roles;
+    private String status;
+    
+    // Linked profile IDs (populated conditionally)
+    private Long studentId;
+    private Long trainerId;
+    private Long centerId;
+}

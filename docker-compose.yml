@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # Database Service
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: sms-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: student_management_System
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  # Application Server Service
+  web-app:
+    build: .
+    container_name: sms-web-app
+    ports:
+      - "8082:8082"
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/student_management_System
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=password123
+      - JWT_SECRET=407A46725678309A4D3B592D3F4428472B4B6250655368566D59713374367739
+    depends_on:
+      - postgres-db
+
+volumes:
+  postgres-data:
