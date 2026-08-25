@@ -56,6 +56,29 @@ public class StudentRequest {
     @Size(max = 100, message = "Qualification must be under 100 characters")
     private String qualification;
 
+    @Size(max = 100, message = "Father name must be under 100 characters")
+    private String fatherName;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String motherName;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String guardianName;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String guardianMobile;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String aadhaarNo;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String city;
+
+    @Size(max = 100, message = "Qualification must be under 100 characters")
+    private String state;
+
+    private String pincode;
+
     private LocalDate registrationDate;
 
     @NotBlank(message = "Status is required")

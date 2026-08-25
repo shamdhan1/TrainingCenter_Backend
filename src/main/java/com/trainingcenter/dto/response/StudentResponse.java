@@ -27,6 +27,21 @@ public class StudentResponse {
     private String email;
     private String address;
     private String qualification;
+    private String fatherName;
+
+    private String motherName;
+
+    private String guardianName;
+
+    private String guardianMobile;
+
+    private String aadhaarNo;
+
+    private String city;
+
+    private String state;
+
+    private String pincode;
     private LocalDate registrationDate;
     private String status;
     private LocalDateTime createdAt;

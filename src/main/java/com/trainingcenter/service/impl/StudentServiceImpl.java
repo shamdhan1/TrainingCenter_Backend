@@ -109,7 +109,16 @@ public class StudentServiceImpl implements StudentService {
                 .email(request.getEmail().toLowerCase().trim())
                 .address(request.getAddress())
                 .qualification(request.getQualification())
-                .registrationDate(request.getRegistrationDate() != null ? request.getRegistrationDate() : java.time.LocalDate.now())
+                .fatherName(request.getFatherName())
+                .motherName(request.getMotherName())
+                .guardianName(request.getGuardianName())
+                .guardianMobile(request.getGuardianMobile())
+                .aadhaarNo(request.getAadhaarNo())
+                .city(request.getCity())
+                .state(request.getState())
+                .pincode(request.getPincode())
+                .registrationDate(request.getRegistrationDate() != null ? request.getRegistrationDate()
+                        : java.time.LocalDate.now())
                 .status(userStatus)
                 .build();
 
@@ -133,7 +142,8 @@ public class StudentServiceImpl implements StudentService {
         // Update UserAccount
         UserAccount user = student.getUser();
         user.setUsername(request.getUsername().toLowerCase().trim());
-        if (request.getPassword() != null && !request.getPassword().trim().isEmpty() && !request.getPassword().equals("********")) {
+        if (request.getPassword() != null && !request.getPassword().trim().isEmpty()
+                && !request.getPassword().equals("********")) {
             user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         }
         user.setEmail(request.getEmail().toLowerCase().trim());
@@ -216,6 +226,14 @@ public class StudentServiceImpl implements StudentService {
                 .mobile(student.getMobile())
                 .email(student.getEmail())
                 .address(student.getAddress())
+                .fatherName(student.getFatherName())
+                .motherName(student.getMotherName())
+                .guardianName(student.getGuardianName())
+                .guardianMobile(student.getGuardianMobile())
+                .aadhaarNo(student.getAadhaarNo())
+                .city(student.getCity())
+                .state(student.getState())
+                .pincode(student.getPincode())
                 .qualification(student.getQualification())
                 .registrationDate(student.getRegistrationDate())
                 .status(student.getStatus().name())

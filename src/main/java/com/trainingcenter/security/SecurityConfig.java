@@ -37,59 +37,62 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/login")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/logout")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/dashboard/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/centers/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/courses/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/students/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/trainers/**")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api/v1/batches/**")).permitAll()
-                .requestMatchers(
-                    new AntPathRequestMatcher("/swagger-ui/**"), 
-                    new AntPathRequestMatcher("/v3/api-docs/**"), 
-                    new AntPathRequestMatcher("/swagger-ui.html")
-                ).permitAll()
-                // Frontend HTML page routes
-                .requestMatchers(
-                    new AntPathRequestMatcher("/"), 
-                    new AntPathRequestMatcher("/login"), 
-                    new AntPathRequestMatcher("/dashboard"), 
-                    new AntPathRequestMatcher("/students"), 
-                    new AntPathRequestMatcher("/trainers"), 
-                    new AntPathRequestMatcher("/courses"), 
-                    new AntPathRequestMatcher("/batches"), 
-                    new AntPathRequestMatcher("/centers")
-                ).permitAll()
-                // Frontend static resources
-                .requestMatchers(
-                    new AntPathRequestMatcher("/html/**"), 
-                    new AntPathRequestMatcher("/css/**"), 
-                    new AntPathRequestMatcher("/js/**"), 
-                    new AntPathRequestMatcher("/favicon.ico"),
-                    new AntPathRequestMatcher("/*.js"),
-                    new AntPathRequestMatcher("/*.css"),
-                    new AntPathRequestMatcher("/*.html"),
-                    new AntPathRequestMatcher("/*.ico"),
-                    new AntPathRequestMatcher("/assets/**")
-                ).permitAll()
-                // H2 Console public access
-                .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
-                .anyRequest().authenticated()
-            );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/login")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/logout")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/dashboard/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/centers/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/courses/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/students/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/trainers/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/batches/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/roles/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/admissions/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll()
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/swagger-ui/**"),
+                                new AntPathRequestMatcher("/v3/api-docs/**"),
+                                new AntPathRequestMatcher("/swagger-ui.html"))
+                        .permitAll()
+                        // Frontend HTML page routes
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/login"),
+                                new AntPathRequestMatcher("/dashboard"),
+                                new AntPathRequestMatcher("/students"),
+                                new AntPathRequestMatcher("/trainers"),
+                                new AntPathRequestMatcher("/courses"),
+                                new AntPathRequestMatcher("/batches"),
+                                new AntPathRequestMatcher("/centers"))
+                        .permitAll()
+                        // Frontend static resources
+                        .requestMatchers(
+                                new AntPathRequestMatcher("/html/**"),
+                                new AntPathRequestMatcher("/css/**"),
+                                new AntPathRequestMatcher("/js/**"),
+                                new AntPathRequestMatcher("/favicon.ico"),
+                                new AntPathRequestMatcher("/*.js"),
+                                new AntPathRequestMatcher("/*.css"),
+                                new AntPathRequestMatcher("/*.html"),
+                                new AntPathRequestMatcher("/*.ico"),
+                                new AntPathRequestMatcher("/assets/**"))
+                        .permitAll()
+                        // H2 Console public access
+                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                        .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

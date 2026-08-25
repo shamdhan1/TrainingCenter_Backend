@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "students", indexes = {
-    @Index(name = "idx_student_reg_no", columnList = "registration_no"),
-    @Index(name = "idx_student_mobile", columnList = "mobile"),
-    @Index(name = "idx_student_email", columnList = "email")
+        @Index(name = "idx_student_reg_no", columnList = "registration_no"),
+        @Index(name = "idx_student_mobile", columnList = "mobile"),
+        @Index(name = "idx_student_email", columnList = "email")
 })
 @Getter
 @Setter
@@ -61,6 +61,30 @@ public class Student {
 
     @Column(name = "qualification", length = 100)
     private String qualification;
+
+    @Column(name = "father_name", length = 100)
+    private String fatherName;
+
+    @Column(name = "mother_name", length = 100)
+    private String motherName;
+
+    @Column(name = "guardian_name", length = 100)
+    private String guardianName;
+
+    @Column(name = "guardian_mobile", length = 15)
+    private String guardianMobile;
+
+    @Column(name = "aadhaar_no", length = 30)
+    private String aadhaarNo;
+
+    @Column(name = "city", length = 80)
+    private String city;
+
+    @Column(name = "state", length = 80)
+    private String state;
+
+    @Column(name = "pincode", length = 10)
+    private String pincode;
 
     @Column(name = "registration_date")
     private LocalDate registrationDate;
