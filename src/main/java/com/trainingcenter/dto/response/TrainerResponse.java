@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -29,4 +30,22 @@ public class TrainerResponse {
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private String gender;
+    private LocalDate dateOfBirth;
+    private String aadhaarNo;
+    private String panNo;
+    private String alternativeMobile;
+    private String address;
+    private String city;
+    private String state;
+    private String pincode;
+    private String designation;
+    private String contractType;
+    private BigDecimal salary;
+    private String bankName;
+    private String bankAccountNumber;
+    private String ifscCode;
+    private String bio;
+
 }

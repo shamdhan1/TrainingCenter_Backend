@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -53,4 +54,49 @@ public class TrainerRequest {
 
     @NotBlank(message = "Status is required")
     private String status; // ACTIVE, INACTIVE, PENDING
+
+    private String gender;
+
+    private LocalDate dateOfBirth;
+
+    @Size(max = 12)
+    private String aadhaarNo;
+
+    @Size(max = 10)
+    private String panNo;
+
+    @Size(max = 15)
+    private String alternativeMobile;
+
+    @Size(max = 255)
+    private String address;
+
+    @Size(max = 50)
+    private String city;
+
+    @Size(max = 50)
+    private String state;
+
+    @Size(max = 10)
+    private String pincode;
+
+    @Size(max = 50)
+    private String designation;
+
+    private String contractType; // e.g. FULL_TIME, PART_TIME, CONTRACT, GUEST
+
+    private BigDecimal salary;
+
+    // Payroll Bank details
+    @Size(max = 100)
+    private String bankName;
+
+    @Size(max = 30)
+    private String bankAccountNumber;
+
+    @Size(max = 20)
+    private String ifscCode;
+
+    // Bio profile
+    private String bio;
 }

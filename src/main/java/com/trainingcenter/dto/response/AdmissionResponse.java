@@ -40,4 +40,5 @@ public class AdmissionResponse {
     private String receiptNo;
 
     private String message;
+
 }

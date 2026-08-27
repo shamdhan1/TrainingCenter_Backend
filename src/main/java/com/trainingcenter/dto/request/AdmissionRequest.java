@@ -4,76 +4,124 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class AdmissionRequest {
 
-    @NotBlank(message = "Username is required")
+    // ==============================
+    // USER ACCOUNT
+    // ==============================
+
+    @NotBlank
     @Size(min = 4, max = 50)
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank
+    @Size(min = 6, max = 50)
     private String password;
 
-    @NotNull(message = "Center ID is required")
+    // ==============================
+    // CENTER
+    // ==============================
+
+    @NotNull
     private Long centerId;
 
-    @NotBlank(message = "Registration number is required")
+    // ==============================
+    // STUDENT
+    // ==============================
+
+    @NotBlank
+    @Size(max = 30)
     private String registrationNo;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank
+    @Size(max = 50)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank
+    @Size(max = 50)
     private String lastName;
 
     private LocalDate dateOfBirth;
 
     private String gender;
 
-    @NotBlank(message = "Mobile is required")
+    @NotBlank
+    @Size(max = 15)
     private String mobile;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @NotBlank
+    @Email
     private String email;
 
-    private String fatherName;
-    private String motherName;
-    private String guardianName;
-    private String guardianMobile;
-    private String aadhaarNo;
     private String qualification;
+
     private String address;
+
     private String city;
+
     private String state;
+
     private String pincode;
+
+    // ==============================
+    // FAMILY
+    // ==============================
+
+    private String fatherName;
+
+    private String motherName;
+
+    private String guardianName;
+
+    private String guardianMobile;
+
+    private String aadhaarNo;
+
+    // ==============================
+    // ADMISSION
+    // ==============================
+
     private LocalDate registrationDate;
+
     private String status;
 
-    @NotNull(message = "Course ID is required")
+    // ==============================
+    // COURSE
+    // ==============================
+
+    @NotNull
     private Long courseId;
 
     private Long trainerId;
 
     private LocalDate startDate;
+
     private LocalDate expectedEndDate;
 
-    private BigDecimal discount;
-    private BigDecimal initialPayment;
+    // ==============================
+    // FEES
+    // ==============================
+
+    private BigDecimal discount = BigDecimal.ZERO;
+
+    private BigDecimal initialPayment = BigDecimal.ZERO;
 
     private String paymentMode;
+
     private String transactionReference;
+
     private LocalDate feeDueDate;
+
+    // ==============================
+    // REMARKS
+    // ==============================
+
     private String remarks;
+
 }

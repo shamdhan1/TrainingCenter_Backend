@@ -9,12 +9,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/trainers")
 public class TrainerRegistrationController {
 
     private final TrainerRegistrationService trainerRegistrationService;
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TrainerRegistrationResponse>> getRagisterTrainers(){
+        List<TrainerRegistrationResponse> allTrainer = trainerRegistrationService.getAllTrainer();
+        return ResponseEntity.ok(allTrainer);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<TrainerRegistrationResponse>> registerTrainer(
@@ -27,4 +36,8 @@ public class TrainerRegistrationController {
                         "Trainer registered successfully",
                         response));
     }
+
+
+
+
 }

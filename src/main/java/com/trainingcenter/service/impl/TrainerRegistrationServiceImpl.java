@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -149,5 +150,42 @@ public class TrainerRegistrationServiceImpl implements TrainerRegistrationServic
                 .ifscCode(savedTrainer.getIfscCode())
                 .bio(savedTrainer.getBio())
                 .build();
+    }
+
+
+    @Override
+    public List<TrainerRegistrationResponse> getAllTrainer() {
+
+        List<Trainer> trainers = trainerRepository.findAll();
+
+        return trainers.stream()
+                .map(trainer -> TrainerRegistrationResponse.builder()
+                        .trainerId(trainer.getTrainerId())
+                        .userId(trainer.getUser().getUserId())
+                        .employeeCode(trainer.getEmployeeCode())
+                        .name(trainer.getName())
+                        .email(trainer.getEmail())
+                        .centerName(trainer.getCenter().getName())
+                        .status(trainer.getStatus().name())
+                        .message("Trainer details fetched successfully")
+                        // Extended profile data
+                        .gender(trainer.getGender())
+                        .dateOfBirth(trainer.getDateOfBirth())
+                        .aadhaarNo(trainer.getAadhaarNo())
+                        .panNo(trainer.getPanNo())
+                        .alternativeMobile(trainer.getAlternativeMobile())
+                        .address(trainer.getAddress())
+                        .city(trainer.getCity())
+                        .state(trainer.getState())
+                        .pincode(trainer.getPincode())
+                        .designation(trainer.getDesignation())
+                        .contractType(trainer.getContractType())
+                        .salary(trainer.getSalary())
+                        .bankName(trainer.getBankName())
+                        .bankAccountNumber(trainer.getBankAccountNumber())
+                        .ifscCode(trainer.getIfscCode())
+                        .bio(trainer.getBio())
+                        .build())
+                .toList();
     }
 }
