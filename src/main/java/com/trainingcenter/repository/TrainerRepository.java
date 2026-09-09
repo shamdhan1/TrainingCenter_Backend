@@ -17,6 +17,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
     Optional<Trainer> findByUserUserId(Long userId);
     Optional<Trainer> findByUserUsername(String username);
     boolean existsByEmployeeCode(String employeeCode);
+    Optional<Trainer> findByEmployeeCode(String employeeCode);
     List<Trainer> findByCenterCenterIdAndStatus(Long centerId, UserStatus status);
 
     @Query("SELECT t FROM Trainer t WHERE " +

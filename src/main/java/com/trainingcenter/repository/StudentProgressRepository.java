@@ -18,4 +18,13 @@ public interface StudentProgressRepository extends JpaRepository<StudentProgress
 
     @Query("SELECT SUM(sp.progressPercent) FROM StudentProgress sp WHERE sp.enrollment.enrollmentId = :enrollmentId")
     Long sumProgressPercentByEnrollmentId(@Param("enrollmentId") Long enrollmentId);
+
+    @Query("""
+    SELECT sp
+    FROM StudentProgress sp
+    WHERE sp.enrollment.enrollmentId = :enrollmentId
+""")
+    List<StudentProgress> findProgressByEnrollmentId(
+            @Param("enrollmentId") Long enrollmentId
+    );
 }

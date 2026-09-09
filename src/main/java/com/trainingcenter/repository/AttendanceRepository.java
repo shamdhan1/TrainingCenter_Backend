@@ -29,4 +29,12 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     long countByAttendanceDate(LocalDate attendanceDate);
 
     long countByAttendanceDateAndEnrollmentCenterCenterId(LocalDate attendanceDate, Long centerId);
+
+
+    List<Attendance> findByTrainerTrainerIdAndAttendanceDateBetween(
+            Long trainerId,
+            LocalDate fromDate,
+            LocalDate toDate
+    );
+
 }

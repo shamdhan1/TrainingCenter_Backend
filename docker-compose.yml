@@ -16,7 +16,9 @@ services:
 
   # Application Server Service
   web-app:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: sms-web-app
     ports:
       - "8082:8082"
