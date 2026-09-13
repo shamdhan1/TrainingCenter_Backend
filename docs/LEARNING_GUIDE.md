@@ -112,10 +112,10 @@ This guide maps out a 14-day study roadmap to understand full stack development 
 - **Exercise**: Run `mvn test` in the terminal.
 - **Explain without AI**: The benefits of unit tests over manual clicks.
 
-### Day 14: Production Architecture & Docker Setup
+### Day 14: Production Architecture & Native Deployment
 - **Files to Read**:
   - [`docs/PRODUCTION_ARCHITECTURE.md`](file:///d:/antigravity/Student-Management-System/docs/PRODUCTION_ARCHITECTURE.md)
-- **Concept**: Nginx routing limits and Docker configurations.
-- **Trace**: Map proxy forwards from port 80 to Spring Boot.
+- **Concept**: Reverse proxy routing limits and native Spring Boot / Angular services.
+- **Trace**: Map proxy forwards to Spring Boot microservices.
 - **Exercise**: Edit environmental variable defaults in `.env.example`.
 - **Explain without AI**: The complete unified hosting architecture flow.

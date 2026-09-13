@@ -33,7 +33,7 @@ Student-Management-System/
 │   └── exception/                <-- Global REST exception handlers
 ├── docs/                         <-- Architecture, guides & API workflow docs
 ├── pom.xml                       <-- Maven project configurations (runs npm builds)
-└── Dockerfile                    <-- Multi-stage build definition
+└── run-all.bat                   <-- Microservices launcher script
 ```
 
 ---

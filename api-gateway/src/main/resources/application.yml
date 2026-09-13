@@ -1,0 +1,114 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Auth Service Route
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/v1/auth/**
+
+        # Admin Service Routes
+        - id: admin-centers
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/v1/centers/**
+
+        - id: admin-courses
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/v1/courses/**
+
+        - id: admin-batches
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/v1/batches/**
+
+        - id: admin-dashboard
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/v1/dashboard/**
+
+        # Trainer Service Routes
+        - id: trainer-service
+          uri: lb://TRAINER-SERVICE
+          predicates:
+            - Path=/api/v1/trainers/**
+
+        - id: trainer-reports
+          uri: lb://TRAINER-SERVICE
+          predicates:
+            - Path=/api/v1/trainer-reports/**
+
+        # Student Service Routes
+        - id: student-service
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/students/**
+
+        - id: student-admissions
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/admissions/**
+
+        - id: student-enrollments
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/enrollments/**
+
+        - id: student-fees
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/fees/**
+
+        - id: student-payments
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/payments/**
+
+        - id: student-attendance
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/attendance/**
+
+        - id: student-assessments
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/assessments/**
+
+        - id: student-progress
+          uri: lb://STUDENT-SERVICE
+          predicates:
+            - Path=/api/v1/student-progress/**
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders: "*"
+            allowCredentials: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.HttpLogging: DEBUG
