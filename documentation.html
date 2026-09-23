@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System - Architecture & Learning Guide</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-body: #0b0f19;
+            --bg-surface: #111827;
+            --bg-card: #182234;
+            --bg-card-hover: #1e293b;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(99, 102, 241, 0.3);
+            
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4338ca;
+            --secondary: #06b6d4;
+            --accent: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --sidebar-width: 290px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273549;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b4e68;
+        }
+
+        /* SIDEBAR NAVIGATION */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .brand-text h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text span {
+            font-size: 0.72rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .nav-category {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 0.8px;
+            padding: 14px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+        }
+
+        .nav-link i {
+            font-size: 0.95rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--primary-light);
+            transform: translateX(3px);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+
+        /* MAIN CONTENT CONTAINER */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px 60px;
+            max-width: 1350px;
+        }
+
+        /* HERO HEADER */
+        .hero-header {
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid var(--border-accent);
+            color: var(--primary-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 40%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 850px;
+            line-height: 1.7;
+        }
+
+        .quick-metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 28px;
+        }
+
+        .metric-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .metric-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .metric-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .metric-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* SECTION STYLING */
+        .doc-section {
+            margin-bottom: 60px;
+            scroll-margin-top: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: -16px;
+            margin-bottom: 24px;
+        }
+
+        /* CONTENT CARDS */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+
+        /* CALLOUT BOXES */
+        .callout {
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin: 20px 0;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .callout-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid var(--info);
+            color: #93c5fd;
+        }
+
+        .callout-tip {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 4px solid var(--success);
+            color: #a7f3d0;
+        }
+
+        .callout-warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--warning);
+            color: #fde68a;
+        }
+
+        .callout-icon {
+            font-size: 1.25rem;
+            margin-top: 2px;
+        }
+
+        .callout-content {
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .callout-content strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* CODE BLOCKS */
+        .code-block {
+            background: #080d1a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .code-header {
+            background: #0f172a;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: color 0.15s;
+        }
+
+        .copy-btn:hover {
+            color: #fff;
+        }
+
+        pre code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            display: block;
+            padding: 16px;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        /* ARCHITECTURE DIAGRAM (SVG / CSS) */
+        .diagram-container {
+            background: #070c17;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 24px 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .diagram-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            min-width: 800px;
+        }
+
+        .flow-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+
+        .flow-box {
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 170px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .flow-box h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .flow-box p {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .box-frontend {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #fff;
+            border-color: #60a5fa;
+        }
+
+        .box-gateway {
+            background: linear-gradient(135deg, #4c1d95, #7c3aed);
+            color: #fff;
+            border-color: #a78bfa;
+        }
+
+        .box-eureka {
+            background: linear-gradient(135deg, #065f46, #059669);
+            color: #fff;
+            border-color: #34d399;
+        }
+
+        .box-service {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #3b82f6;
+            flex: 1;
+        }
+
+        .box-db {
+            background: #111c2d;
+            border: 1px dashed #0ea5e9;
+            color: #38bdf8;
+            flex: 1;
+        }
+
+        .connector-down {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-light);
+            font-size: 1.2rem;
+        }
+
+        /* TABLES */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: #172235;
+            padding: 12px 16px;
+            color: #cbd5e1;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-admin { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99,102,241,0.4); }
+        .badge-trainer { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); }
+        .badge-student { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
+        .badge-get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; font-family: monospace; }
+        .badge-post { background: rgba(16, 185, 129, 0.2); color: #34d399; font-family: monospace; }
+        .badge-put { background: rgba(245, 158, 11, 0.2); color: #fbbf24; font-family: monospace; }
+        .badge-delete { background: rgba(239, 68, 68, 0.2); color: #f87171; font-family: monospace; }
+
+        /* INTERACTIVE ACCORDION */
+        .accordion-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .accordion-icon {
+            transition: transform 0.25s ease;
+            color: var(--text-dim);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+            color: var(--primary-light);
+        }
+
+        /* HINGLISH EXPLANATION TAG */
+        .hinglish-box {
+            background: rgba(236, 72, 153, 0.06);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.88rem;
+            color: #f472b6;
+        }
+
+        .hinglish-box strong {
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.25s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .sidebar {
+                display: none;
+            }
+            .main-wrapper {
+                margin-left: 0;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">🎓</div>
+            <div class="brand-text">
+                <h2>SMS System</h2>
+                <span>Learning & Architecture</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-category">Getting Started</div>
+            <a href="#overview" class="nav-link active"><i class="fas fa-cubes"></i> System Overview</a>
+            <a href="#architecture" class="nav-link"><i class="fas fa-sitemap"></i> High-Level Architecture</a>
+            
+            <div class="nav-category">Microservices Deep Dive</div>
+            <a href="#service-registry" class="nav-link"><i class="fas fa-compass"></i> 1. Service Registry (Eureka)</a>
+            <a href="#api-gateway" class="nav-link"><i class="fas fa-shield-alt"></i> 2. API Gateway (Spring Cloud)</a>
+            <a href="#auth-service" class="nav-link"><i class="fas fa-key"></i> 3. Auth Service (JWT & RBAC)</a>
+            <a href="#admin-service" class="nav-link"><i class="fas fa-school"></i> 4. Admin Service</a>
+            <a href="#trainer-service" class="nav-link"><i class="fas fa-chalkboard-teacher"></i> 5. Trainer Service</a>
+            <a href="#student-service" class="nav-link"><i class="fas fa-user-graduate"></i> 6. Student Service</a>
+            
+            <div class="nav-category">Workflows & Logic</div>
+            <a href="#workflow-login" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login & JWT Workflow</a>
+            <a href="#workflow-rbac" class="nav-link"><i class="fas fa-user-lock"></i> Role-Based Authority (RBAC)</a>
+            <a href="#workflow-feign" class="nav-link"><i class="fas fa-network-wired"></i> Inter-Service Feign Calls</a>
+            <a href="#databases" class="nav-link"><i class="fas fa-database"></i> Database-per-Service</a>
+            
+            <div class="nav-category">Interview & Concepts</div>
+            <a href="#interview-qa" class="nav-link"><i class="fas fa-graduation-cap"></i> Core Concepts & Viva Q&A</a>
+            <a href="#cheat-sheet" class="nav-link"><i class="fas fa-terminal"></i> Commands & Endpoints</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrapper">
+
+        <!-- HERO HEADER -->
+        <header id="overview" class="hero-header">
+            <div class="hero-badge">
+                <i class="fas fa-award"></i> Production Microservices Blueprint
+            </div>
+            <h1 class="hero-title">Student Management System<br>Technical & Learning Guide</h1>
+            <p class="hero-desc">
+                Ye complete architecture & workflow documentation file hai. Iska main objective aapko <strong>Spring Boot Microservices, Service Discovery (Eureka), API Gateway, JWT Security, Database-per-Service isolation, OpenFeign client communication aur Angular Frontend integration</strong> ko crystal clear detail me samjhana hai.
+            </p>
+
+            <div class="quick-metrics-row">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: rgba(99,102,241,0.15); color: #818cf8;">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div>
+                        <div class="metric-val">6</div>
+                        <div class="metric-lbl">Microservices</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: rgba(6,182,212,0.15); color: #22d3ee;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <div class="metric-val">4</div>
+                        <div class="metric-lbl">Isolated Databases</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: rgba(16,185,129,0.15); color: #34d399;">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <div>
+                        <div class="metric-val">3</div>
+                        <div class="metric-lbl">Distinct User Roles</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: rgba(245,158,11,0.15); color: #fbbf24;">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <div class="metric-val">1-Click</div>
+                        <div class="metric-lbl">Auto Role Login</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- SECTION 1: ARCHITECTURE OVERVIEW -->
+        <section id="architecture" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-sitemap"></i></div>
+                <h2 class="section-title">High-Level System Architecture</h2>
+            </div>
+            <p class="section-subtitle">Kaise frontend, API Gateway, Eureka aur individual services aapas me judte hain.</p>
+
+            <div class="card">
+                <h3 style="margin-bottom: 12px; color: #fff;">System Flow Architecture Diagram</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px;">
+                    Har ek client request Angular Single Page App (Port 4200) se nikal kar pehle **API Gateway (Port 8080)** par aati hai. Gateway token verify karta hai aur Eureka Discovery ke through target microservice ko route karta hai.
+                </p>
+
+                <!-- VISUAL DIAGRAM -->
+                <div class="diagram-container">
+                    <div class="diagram-flow">
+                        <!-- Level 1: Client -->
+                        <div class="flow-level">
+                            <div class="flow-box box-frontend">
+                                <h4>Angular SPA Frontend</h4>
+                                <p>http://localhost:4200</p>
+                            </div>
+                        </div>
+
+                        <div class="connector-down"><i class="fas fa-arrow-down"></i> REST via HTTP Proxy</div>
+
+                        <!-- Level 2: Gateway & Eureka -->
+                        <div class="flow-level">
+                            <div class="flow-box box-gateway" style="flex: 2;">
+                                <h4>Spring Cloud API Gateway</h4>
+                                <p>Port 8080 (JWT Filter + Route Predicates)</p>
+                            </div>
+                            <div style="font-size: 1.2rem; color: #10b981;"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="flow-box box-eureka" style="flex: 1.2;">
+                                <h4>Eureka Registry</h4>
+                                <p>Port 8761 (@EnableEurekaServer)</p>
+                            </div>
+                        </div>
+
+                        <div class="connector-down"><i class="fas fa-arrow-down"></i> Dynamic Service Resolution (lb://SERVICE-NAME)</div>
+
+                        <!-- Level 3: Microservices -->
+                        <div class="flow-level">
+                            <div class="flow-box box-service">
+                                <h4>Auth Service</h4>
+                                <p>:8084 | JWT & RBAC</p>
+                            </div>
+                            <div class="flow-box box-service">
+                                <h4>Admin Service</h4>
+                                <p>:8081 | Centers & Batches</p>
+                            </div>
+                            <div class="flow-box box-service">
+                                <h4>Trainer Service</h4>
+                                <p>:8082 | Trainers & Reports</p>
+                            </div>
+                            <div class="flow-box box-service">
+                                <h4>Student Service</h4>
+                                <p>:8083 | Students & Fees</p>
+                            </div>
+                        </div>
+
+                        <div class="connector-down"><i class="fas fa-arrow-down"></i> Isolated JPA / Hibernate Connections</div>
+
+                        <!-- Level 4: Databases -->
+                        <div class="flow-level">
+                            <div class="flow-box box-db">
+                                <h4>sms_auth_db</h4>
+                                <p>MySQL (User accounts)</p>
+                            </div>
+                            <div class="flow-box box-db">
+                                <h4>sms_admin_db</h4>
+                                <p>MySQL (Courses, Batches)</p>
+                            </div>
+                            <div class="flow-box box-db">
+                                <h4>sms_trainer_db</h4>
+                                <p>MySQL (Trainers)</p>
+                            </div>
+                            <div class="flow-box box-db">
+                                <h4>sms_student_db</h4>
+                                <p>MySQL (Admissions, Fees)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hinglish-box">
+                    <strong><i class="fas fa-lightbulb"></i> Samajhne Ka Saral Tareeka (Simple Logic):</strong>
+                    Jaise ek bada hospital hota hai: 
+                    1. <strong>Eureka (8761)</strong> reception desk ki diary hai jisme har doctor ka cabin number likha hota hai.
+                    2. <strong>API Gateway (8080)</strong> main entrance ka security guard hai jo check karta hai ki aapke paas entry pass (JWT Token) hai ya nahi.
+                    3. <strong>Microservices (8081, 8082, 8083, 8084)</strong> alag-alag specialized departments hain (Admissions, Trainers, Accounts).
+                    4. <strong>Isolated DBs</strong> har department ki personal cupboard/almirah hain jisme dusra department bina permission haath nahi daal sakta.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE 6 MICROSERVICES -->
+        <section id="services" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-cubes"></i></div>
+                <h2 class="section-title">Detailed Breakdown: 6 Microservices</h2>
+            </div>
+            <p class="section-subtitle">Har ek microservice ka role, port, database, aur internal components.</p>
+
+            <!-- 1. SERVICE REGISTRY -->
+            <div id="service-registry" class="accordion-item active">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #34d399;"><i class="fas fa-compass"></i></span>
+                        <span>1. Service Registry (Netflix Eureka Server) — Port: 8761</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> Phonebook of all microservices.</p>
+                    <p>Jab koi service (jaise `trainer-service`) start hoti hai, to wo Eureka ke paas jaakar apna naam aur IP/Port register karwati hai ("Main live hoon!"). Jab `admin-service` ko `trainer-service` se baat karni hoti hai, to use hardcoded IP `localhost:8082` nahi likhna padta; wo Eureka se poochti hai: <em>"TRAINER-SERVICE kahan chal rahi hai?"</em></p>
+                    
+                    <div class="callout callout-tip">
+                        <i class="fas fa-check-circle callout-icon"></i>
+                        <div class="callout-content">
+                            <strong>Key Spring Boot Annotation:</strong>
+                            <code>@EnableEurekaServer</code> in <code>ServiceRegistryApplication.java</code>.
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>service-registry/src/main/resources/application.properties</span>
+                            <button class="copy-btn" onclick="copySnippet(this)"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code>server.port=8761
+eureka.instance.hostname=localhost
+# Eureka ko khud ko register nahi karna padta
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. API GATEWAY -->
+            <div id="api-gateway" class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #a78bfa;"><i class="fas fa-shield-alt"></i></span>
+                        <span>2. API Gateway (Spring Cloud Gateway) — Port: 8080</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> Single Entry Point, CORS handling, JWT Token Validation & Header Forwarding.</p>
+                    <p>Frontend ko alag-alag 5 ports yaad rakhne ki jarurat nahi hai. Frontend sirf <code>http://localhost:8080/api/v1/...</code> par call bhejta hai. Gateway me likha hua <code>AuthenticationFilter</code> ye check karta hai:</p>
+                    <ul style="margin: 10px 0 10px 24px;">
+                        <li>Kya ye request open URL hai? (e.g., <code>/api/v1/auth/login</code> ya <code>/actuator/health</code>). Agar haan, to seedhe jaane deta hai.</li>
+                        <li>Agar secured URL hai, to kya <code>Authorization: Bearer &lt;token&gt;</code> header maujood hai?</li>
+                        <li>Kya JWT valid hai aur expire to nahi hua?</li>
+                        <li>Token decode karke user details ko headers me inject karta hai: <code>X-User-Id</code>, <code>X-User-Name</code>, <code>X-User-Roles</code> taaki downstream services ko dubara token verify na karna pade!</li>
+                    </ul>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>api-gateway/src/main/resources/application.properties (Routing Rules)</span>
+                            <button class="copy-btn" onclick="copySnippet(this)"><i class="far fa-copy"></i></button>
+                        </div>
+                        <pre><code># Route 1: Auth Service
+spring.cloud.gateway.routes[0].id=auth-service
+spring.cloud.gateway.routes[0].uri=lb://AUTH-SERVICE
+spring.cloud.gateway.routes[0].predicates[0]=Path=/api/v1/auth/**
+
+# Route 2: Admin Service
+spring.cloud.gateway.routes[1].id=admin-service
+spring.cloud.gateway.routes[1].uri=lb://ADMIN-SERVICE
+spring.cloud.gateway.routes[1].predicates[0]=Path=/api/v1/centers/**,/api/v1/courses/**,/api/v1/batches/**,/api/v1/dashboard/**
+
+# Route 3: Trainer Service
+spring.cloud.gateway.routes[2].id=trainer-service
+spring.cloud.gateway.routes[2].uri=lb://TRAINER-SERVICE
+spring.cloud.gateway.routes[2].predicates[0]=Path=/api/v1/trainers/**,/api/v1/trainer-reports/**
+
+# Route 4: Student Service
+spring.cloud.gateway.routes[3].id=student-service
+spring.cloud.gateway.routes[3].uri=lb://STUDENT-SERVICE
+spring.cloud.gateway.routes[3].predicates[0]=Path=/api/v1/students/**,/api/v1/admissions/**,/api/v1/enrollments/**,/api/v1/fees/**</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. AUTH SERVICE -->
+            <div id="auth-service" class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #60a5fa;"><i class="fas fa-key"></i></span>
+                        <span>3. Auth Service — Port: 8084 | DB: sms_auth_db</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> User accounts, Passwords (BCrypt), Roles & JWT Generation.</p>
+                    <p>Jab user username aur password daalta hai:</p>
+                    <ol style="margin: 10px 0 10px 24px;">
+                        <li><code>AuthController.login()</code> call hota hai.</li>
+                        <li>Spring Security <code>AuthenticationManager</code> username dhoondhta hai aur <code>BCryptPasswordEncoder</code> se password match karta hai.</li>
+                        <li>Match hone par <code>JwtTokenProvider</code> ek signed JWT token banata hai jisme user ID, username aur assigned roles (e.g. <code>ROLE_ADMIN</code>, <code>ROLE_TRAINER</code>, <code>ROLE_STUDENT</code>) embedded hote hain.</li>
+                        <li>Response me JWT Token aur basic profile data frontend ko return hota hai.</li>
+                    </ol>
+
+                    <div class="callout callout-info">
+                        <i class="fas fa-database callout-icon"></i>
+                        <div class="callout-content">
+                            <strong>Tables in sms_auth_db:</strong>
+                            <code>user_accounts</code> (User credentials, password hash, status), <code>roles</code> (Role definitions), <code>user_roles</code> (Mapping between user & role).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ADMIN SERVICE -->
+            <div id="admin-service" class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #f59e0b;"><i class="fas fa-school"></i></span>
+                        <span>4. Admin Service — Port: 8081 | DB: sms_admin_db</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> Centers, Courses, Batches, aur Consolidated Dashboard Stats.</p>
+                    <p>Admin Service training center system ka backbone hai:</p>
+                    <ul style="margin: 10px 0 10px 24px;">
+                        <li><strong>Centers Management:</strong> Pune, Sambhajinagar, Ahmednagar, Mumbai, Nashik, Nagpur campuses.</li>
+                        <li><strong>Courses Catalog:</strong> C, C++, Core Java, Java Full Stack, Python Full Stack, Angular, Spring Microservices etc.</li>
+                        <li><strong>Batches Scheduling:</strong> Batch timings, start/end dates, max capacity, trainer assignment.</li>
+                        <li><strong>Dashboard Statistics:</strong> Admin dashboard par 4 cards dikhte hain (Total Centers, Courses, Trainers, Students). Admin service <code>TrainerClient</code> aur <code>StudentClient</code> (OpenFeign) ko call karke realtime counts aggregate karti hai!</li>
+                    </ul>
+
+                    <div class="callout callout-info">
+                        <i class="fas fa-database callout-icon"></i>
+                        <div class="callout-content">
+                            <strong>Tables in sms_admin_db:</strong>
+                            <code>centers</code>, <code>courses</code>, <code>course_contents</code>, <code>batches</code>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. TRAINER SERVICE -->
+            <div id="trainer-service" class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #ec4899;"><i class="fas fa-chalkboard-teacher"></i></span>
+                        <span>5. Trainer Service — Port: 8082 | DB: sms_trainer_db</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> Trainer profiles, Trainer registration, Performance evaluations & Reports.</p>
+                    <ul style="margin: 10px 0 10px 24px;">
+                        <li><strong>Trainer Management:</strong> Employee code, specialization, assigned center, experience.</li>
+                        <li><strong>Trainer Registration API:</strong> Admin jab naya trainer register karta hai to ye service trainer details persist karti hai.</li>
+                        <li><strong>Trainer Reports API:</strong> Trainer ke assigned students, syllabus completion %, student feedback aur attendance reports generate karta hai.</li>
+                    </ul>
+
+                    <div class="callout callout-info">
+                        <i class="fas fa-database callout-icon"></i>
+                        <div class="callout-content">
+                            <strong>Tables in sms_trainer_db:</strong>
+                            <code>trainers</code> (Employee code, center_id, specialization, phone, email).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. STUDENT SERVICE -->
+            <div id="student-service" class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span style="color: #38bdf8;"><i class="fas fa-user-graduate"></i></span>
+                        <span>6. Student Service — Port: 8083 | DB: sms_student_db</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Main Role:</strong> Student directory, Admissions, Course Enrollments, Fee Accounts & Payment Tracking.</p>
+                    <ul style="margin: 10px 0 10px 24px;">
+                        <li><strong>Student Registration:</strong> Registration number (e.g. STU-2026-0001), personal info, guardian contact.</li>
+                        <li><strong>Admissions & Enrollments:</strong> Student ko kisi course aur center me enroll karna.</li>
+                        <li><strong>Fee Account:</strong> Total course fees, amount paid, balance amount, installments, payment receipts.</li>
+                        <li><strong>Academic Progress:</strong> Attendance records and assessment scores.</li>
+                    </ul>
+
+                    <div class="callout callout-info">
+                        <i class="fas fa-database callout-icon"></i>
+                        <div class="callout-content">
+                            <strong>Tables in sms_student_db:</strong>
+                            <code>students</code>, <code>enrollments</code>, <code>fee_accounts</code>, <code>payments</code>, <code>attendance</code>, <code>assessments</code>, <code>student_progress</code>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WORKFLOWS -->
+        <section id="workflow-login" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-sign-in-alt"></i></div>
+                <h2 class="section-title">Login & Authentication Workflow</h2>
+            </div>
+            <p class="section-subtitle">Kaise 1-click auto-login ya manual credentials se user authenticate hota hai.</p>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Step #</th>
+                                <th>Actor</th>
+                                <th>Action Performed</th>
+                                <th>Internal Technical Logic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1</strong></td>
+                                <td>User / Browser</td>
+                                <td>Clicks "🛡️ Admin" or enters credentials</td>
+                                <td>Angular executes <code>login({ username, password })</code> and sends POST to <code>/api/v1/auth/login</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2</strong></td>
+                                <td>API Gateway</td>
+                                <td>Receives request on port 8080</td>
+                                <td>Matches route <code>/api/v1/auth/**</code>. As it is an open route, forwards directly to <code>lb://AUTH-SERVICE</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3</strong></td>
+                                <td>Auth Service</td>
+                                <td>Validates in <code>sms_auth_db</code></td>
+                                <td><code>BCryptPasswordEncoder.matches(raw, hash)</code> verifies password. Fetches roles (<code>ROLE_ADMIN</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4</strong></td>
+                                <td>Auth Service</td>
+                                <td>Generates JWT Token</td>
+                                <td>Generates compact JWT token using JJWT library containing claims: <code>sub: rahul_admin, roles: [ROLE_ADMIN]</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5</strong></td>
+                                <td>Frontend</td>
+                                <td>Saves Token & Updates State</td>
+                                <td>Saves token in <code>localStorage</code>. Updates Angular Signals: <code>currentUser.set(...)</code> and <code>isAdmin.set(true)</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6</strong></td>
+                                <td>Router Guard</td>
+                                <td>Redirects to Role Dashboard</td>
+                                <td>Navigates to <code>/dashboard</code>. Angular template dynamically shows Admin View + Admin Sidebar menu!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: ROLE BASED ACCESS CONTROL -->
+        <section id="workflow-rbac" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-user-lock"></i></div>
+                <h2 class="section-title">Role-Based Authority (RBAC Matrix)</h2>
+            </div>
+            <p class="section-subtitle">Kisko kya dekhne aur karne ki permission hai.</p>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature / Route</th>
+                                <th>Admin (<span class="badge badge-admin">ROLE_ADMIN</span>)</th>
+                                <th>Trainer (<span class="badge badge-trainer">ROLE_TRAINER</span>)</th>
+                                <th>Student (<span class="badge badge-student">ROLE_STUDENT</span>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Dashboard Screen</strong></td>
+                                <td>✅ 4 System Stats + Quick Admin Actions</td>
+                                <td>✅ Trainer Workspace + Assigned Batches</td>
+                                <td>✅ Learning Portal + Curriculum + Status</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Student Admissions (/admissions)</strong></td>
+                                <td>✅ Full Access (Create, View, Enroll)</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trainer Registration (/trainer-registration)</strong></td>
+                                <td>✅ Full Access</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Training Centers (/centers)</strong></td>
+                                <td>✅ Manage Campuses & Locations</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Courses (/courses)</strong></td>
+                                <td>✅ View & Manage Courses</td>
+                                <td>✅ View Syllabus & Courses</td>
+                                <td>✅ View Course Curriculum</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trainers Directory (/trainers)</strong></td>
+                                <td>✅ Full Access</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Students Directory (/students)</strong></td>
+                                <td>✅ View All & Manage</td>
+                                <td>✅ View Students in Batches</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Batches (/batches)</strong></td>
+                                <td>✅ Create & Assign Batches</td>
+                                <td>✅ View Assigned Batches</td>
+                                <td>✅ View "My Batches" Schedule</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trainer Reports (/trainer-reports)</strong></td>
+                                <td>✅ View all performance metrics</td>
+                                <td>✅ Generate personal reports</td>
+                                <td>❌ Blocked by <code>roleGuard</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout callout-warning">
+                    <i class="fas fa-exclamation-triangle callout-icon"></i>
+                    <div class="callout-content">
+                        <strong>Security Guarantee (Double Layer Protection):</strong>
+                        Even agar koi student browser me direct URL type karta hai jaise <code>http://localhost:4200/centers</code>, to frontend ka <strong>roleGuard.ts</strong> use detect karke wapas <code>/dashboard</code> bhej deta hai. Aur agar direct API call karta hai to API Gateway <code>403 Forbidden</code> return karta hai.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FEIGN CLIENTS -->
+        <section id="workflow-feign" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-network-wired"></i></div>
+                <h2 class="section-title">Inter-Service Communication (Spring Cloud OpenFeign)</h2>
+            </div>
+            <p class="section-subtitle">Kaise microservices aapas me baat karti hain bina hardcoded IP address ke.</p>
+
+            <div class="card">
+                <p style="margin-bottom: 16px;">
+                    Microservices me ek service dusri service ke database me direct SQL query nahi karti (Database-per-Service principle). 
+                    Jab <strong>Admin Service</strong> ko Dashboard par <em>"Total Trainers"</em> aur <em>"Total Students"</em> dikhana hota hai, to wo <strong>OpenFeign Client</strong> use karti hai:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>admin-service/.../client/TrainerClient.java</span>
+                        <button class="copy-btn" onclick="copySnippet(this)"><i class="far fa-copy"></i></button>
+                    </div>
+                    <pre><code>// name = "trainer-service" Eureka me registered service ka name hai
+@FeignClient(name = "trainer-service")
+public interface TrainerClient {
+
+    @GetMapping("/api/v1/trainers/count")
+    ApiResponse&lt;Long&gt; getTrainersCount();
+
+    @GetMapping("/api/v1/trainers/{id}")
+    ApiResponse&lt;TrainerDto&gt; getTrainerById(@PathVariable("id") Long id);
+}</code></pre>
+                </div>
+
+                <div class="hinglish-box">
+                    <strong><i class="fas fa-magic"></i> Feign Ka Jadoo:</strong>
+                    Aapko sirf ek Java Interface likhna hota hai. Spring Cloud runtime par khud uska HTTP Client create kar leta hai aur Eureka se <code>trainer-service</code> ka IP aur Port nikaal kar request execute kar deta hai!
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: DATABASES -->
+        <section id="databases" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-database"></i></div>
+                <h2 class="section-title">Database-per-Service Architecture</h2>
+            </div>
+            <p class="section-subtitle">Har ek service ka apna independent schema aur data isolation.</p>
+
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Database Name</th>
+                                <th>Owning Service</th>
+                                <th>Core Tables</th>
+                                <th>Business Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong style="color: #60a5fa;">sms_auth_db</strong></td>
+                                <td>Auth Service (:8084)</td>
+                                <td><code>user_accounts</code>, <code>roles</code>, <code>user_roles</code></td>
+                                <td>System access, hashed passwords, user statuses</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: #f59e0b;">sms_admin_db</strong></td>
+                                <td>Admin Service (:8081)</td>
+                                <td><code>centers</code>, <code>courses</code>, <code>course_contents</code>, <code>batches</code></td>
+                                <td>Campus locations, academic curriculum, batch calendar</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: #ec4899;">sms_trainer_db</strong></td>
+                                <td>Trainer Service (:8082)</td>
+                                <td><code>trainers</code></td>
+                                <td>Faculty directory, specializations, ratings</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: #38bdf8;">sms_student_db</strong></td>
+                                <td>Student Service (:8083)</td>
+                                <td><code>students</code>, <code>enrollments</code>, <code>fee_accounts</code>, <code>payments</code>, <code>attendance</code></td>
+                                <td>Student lifecycle, admissions, billing & installments</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout callout-info">
+                    <i class="fas fa-info-circle callout-icon"></i>
+                    <div class="callout-content">
+                        <strong>Why Database-per-Service is Mandatory in Industry:</strong>
+                        Agar sabhi services ek hi database share karengi, to jab Student Service ka table lock hoga to Admin aur Auth services bhi atak jayengi. Isolated databases hone se har service ko independent failure boundary aur scaling milti hai.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: INTERVIEW & CORE CONCEPTS -->
+        <section id="interview-qa" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h2 class="section-title">Core Concepts & Interview / Viva Q&A</h2>
+            </div>
+            <p class="section-subtitle">Top technical questions jo exams ya job interviews me pooche jaate hain.</p>
+
+            <div class="accordion-item active">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span>Q1: Monolith vs Microservices me kya antar hai, aur humne ise kyun use kiya?</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Answer:</strong> Monolith me saara code (Admissions, Fees, Trainers, Auth) ek hi JAR file me hota hai. Agar Fees module me koi bug aaye to pura system down ho jata hai.</p>
+                    <p>Microservices me har business domain ek independent service hoti hai jiska apna database hota hai. Agar Student Service me issue aata hai, tab bhi Admin aur Trainer services smoothly chalti rahti hain. Sath hi har service ko independently scale kiya ja sakta hai.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span>Q2: Eureka Server (Service Discovery) ka kya role hai?</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Answer:</strong> Cloud environment me services dynamically scale hoti hain aur unka IP address change hota rahta hai. Agar hum hardcoded IP use karenge to application break ho jayegi.</p>
+                    <p>Eureka ek dynamic Registry provide karta hai. Har service startup par Eureka ko apna heartbeat bhejti hai. Eureka unke live network locations ko track karta hai.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span>Q3: API Gateway kyun jaruri hai? Client direct microservice ko call kyun nahi karta?</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Answer:</strong> Agar client (browser) direct microservices ko call karega to:
+                    1. Browser ko 5 alag-alag ports yaad rakhne padenge.
+                    2. Har service par alag se CORS configure karna padega.
+                    3. Har microservice ko dubara JWT token check karna padega (code duplication).
+                    4. Internal services public internet par expose ho jayengi jo huge security risk hai.</p>
+                    <p>API Gateway ek security barrier aur router ka kaam karta hai.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span>Q4: JWT (JSON Web Token) Stateless Authentication kaise kaam karta hai?</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Answer:</strong> Traditional session-based authentication me server memory (HttpSession) me user session save karta hai, jo microservices me scale nahi hota (kyunki request kisi bhi instance par ja sakti hai).</p>
+                    <p>JWT **Stateless** hota hai: Token ke 3 parts hote hain: <em>Header.Payload.Signature</em>. Payload me user ka ID aur Role encrypted signature ke sath hota hai. Server ko database check kiye bina signature verify karke pata chal jata hai ki token authentic hai ya nahi.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <span>Q5: Database-per-Service pattern me data integrity kaise maintain hoti hai?</span>
+                    </div>
+                    <i class="fas fa-chevron-down accordion-icon"></i>
+                </div>
+                <div class="accordion-content">
+                    <p><strong>Answer:</strong> Har service ka apna schema hota hai (e.g. `sms_admin_db`, `sms_student_db`). Kisi table par Foreign Key relation direct dusre database ke table se nahi lagaya jata. Iski jagah ID reference (e.g. `centerId`, `trainerId`) store hota hai aur detail lene ke liye REST/Feign API call use ki jaati hai.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: CHEAT SHEET -->
+        <section id="cheat-sheet" class="doc-section">
+            <div class="section-header">
+                <div class="section-icon"><i class="fas fa-terminal"></i></div>
+                <h2 class="section-title">Commands & Endpoints Cheat-Sheet</h2>
+            </div>
+            <p class="section-subtitle">System ko run karne aur test karne ke quick commands.</p>
+
+            <div class="card">
+                <h4 style="margin-bottom: 12px; color: #fff;">Application Launch Scripts (Windows):</h4>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>Terminal Execution (Root Directory)</span>
+                        <button class="copy-btn" onclick="copySnippet(this)"><i class="far fa-copy"></i></button>
+                    </div>
+                    <pre><code># 1. Start all 6 Microservices (Eureka, Gateway, Auth, Admin, Trainer, Student):
+.\run-backend.bat
+
+# 2. Start Frontend Angular Single Page Application:
+.\run-frontend.bat
+
+# 3. Stop All Services (Kills ports 8761, 8080-8084, 4200):
+.\backend\stop-all.bat</code></pre>
+                </div>
+
+                <h4 style="margin-top: 24px; margin-bottom: 12px; color: #fff;">Service URLs & Health Checks:</h4>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Port</th>
+                                <th>URL / Endpoint</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Angular Frontend</strong></td>
+                                <td>4200</td>
+                                <td><a href="http://localhost:4200" target="_blank" style="color: #60a5fa;">http://localhost:4200</a></td>
+                                <td>User Interface / Login & Portals</td>
+                            </tr>
+                            <tr>
+                                <td><strong>API Gateway</strong></td>
+                                <td>8080</td>
+                                <td><a href="http://localhost:8080" target="_blank" style="color: #60a5fa;">http://localhost:8080</a></td>
+                                <td>Unified REST Gateway Entry</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eureka Dashboard</strong></td>
+                                <td>8761</td>
+                                <td><a href="http://localhost:8761" target="_blank" style="color: #60a5fa;">http://localhost:8761</a></td>
+                                <td>View Registered Instances Live</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Admin Service</strong></td>
+                                <td>8081</td>
+                                <td><code>http://localhost:8081/actuator/health</code></td>
+                                <td>Centers, Courses, Batches API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trainer Service</strong></td>
+                                <td>8082</td>
+                                <td><code>http://localhost:8082/actuator/health</code></td>
+                                <td>Trainers, Registration, Reports API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Student Service</strong></td>
+                                <td>8083</td>
+                                <td><code>http://localhost:8083/actuator/health</code></td>
+                                <td>Students, Admissions, Fees API</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Auth Service</strong></td>
+                                <td>8084</td>
+                                <td><code>http://localhost:8084/api/v1/auth/me</code></td>
+                                <td>JWT Verification & User Profile</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="toast" id="toast">Copied to Clipboard!</div>
+
+    <script>
+        // Accordion Toggle
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+
+        // Copy Code Snippet
+        function copySnippet(button) {
+            const pre = button.parentElement.nextElementSibling;
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Code snippet copied!');
+            });
+        }
+
+        // Show Toast Notification
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Scrollspy for Sidebar links
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.doc-section, .accordion-item');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
