@@ -7,28 +7,28 @@ $env:PATH = "$env:USERPROFILE\AppData\Local\Programs\Maven\apache-maven-3.9.9\bi
 $env:JAVA_HOME = "$env:USERPROFILE\AppData\Local\Programs\Microsoft\jdk-17.0.10.7-hotspot"
 
 Write-Host "[1/6] Launching Service Registry (Eureka) on port 8761..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\service-registry`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\service-registry"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\service-registry`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\service-registry"
 
 Write-Host "Waiting 15 seconds for Eureka Registry to initialize..." -ForegroundColor Gray
 Start-Sleep -Seconds 15
 
 Write-Host "[2/6] Launching Auth Service on port 8084..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\auth-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\auth-service"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\auth-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\auth-service"
 
 Write-Host "[3/6] Launching Admin Service on port 8081..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\admin-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\admin-service"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\admin-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\admin-service"
 
 Write-Host "[4/6] Launching Trainer Service on port 8082..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\trainer-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\trainer-service"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\trainer-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\trainer-service"
 
 Write-Host "[5/6] Launching Student Service on port 8083..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\student-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\student-service"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\student-service`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\student-service"
 
 Write-Host "Waiting 10 seconds before starting API Gateway..." -ForegroundColor Gray
 Start-Sleep -Seconds 10
 
 Write-Host "[6/6] Launching API Gateway on port 8080..." -ForegroundColor Yellow
-Start-Process cmd.exe -ArgumentList "/k cd /d `"$backendDir\api-gateway`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\api-gateway"
+Start-Process cmd.exe -ArgumentList "/k set `"PATH=$env:PATH`" && set `"JAVA_HOME=$env:JAVA_HOME`" && cd /d `"$backendDir\api-gateway`" && mvn spring-boot:run" -WorkingDirectory "$backendDir\api-gateway"
 
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Green

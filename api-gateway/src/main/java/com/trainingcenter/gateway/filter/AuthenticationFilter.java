@@ -26,7 +26,8 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             "/api/v1/auth/register",
             "/api/v1/auth/validate",
             "/v3/api-docs",
-            "/swagger-ui"
+            "/swagger-ui",
+            "/actuator"
     );
 
     public AuthenticationFilter(JwtUtil jwtUtil) {

@@ -1,13 +1,15 @@
 server:
-  port: 8080
+  port: ${GATEWAY_PORT:8080}
 
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - name: AuthenticationFilter
       routes:
-        # Auth Service Route
+        # Auth Service Route (Login/Register are open — filter skips them)
         - id: auth-service
           uri: lb://AUTH-SERVICE
           predicates:
@@ -91,6 +93,7 @@ spring:
           '[/**]':
             allowedOrigins:
               - "http://localhost:4200"
+              - "http://127.0.0.1:4200"
             allowedMethods:
               - GET
               - POST
@@ -99,16 +102,48 @@ spring:
               - OPTIONS
               - PATCH
             allowedHeaders: "*"
+            exposedHeaders:
+              - "Authorization"
+              - "Content-Type"
             allowCredentials: true
+            maxAge: 3600
+
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 30s
+
+# JWT Configuration (same secret shared with auth-service)
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
   instance:
     prefer-ip-address: true
 
+# Actuator for health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: API Gateway
+    description: Spring Cloud Gateway - Entry Point for Training Center Microservices
+    version: 1.0.0
+
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.web.HttpLogging: DEBUG
+    org.springframework.cloud.gateway: WARN
+    com.trainingcenter.gateway: INFO
